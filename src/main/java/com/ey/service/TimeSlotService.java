@@ -18,18 +18,32 @@ public class TimeSlotService {
 	}
 
 	public TimeSlot createSlot(TimeSlot slot) {
-		return slotRepo.save(slot);
+	    List<TimeSlot> existing = slotRepo.findByTableIdAndDate(slot.getTableId(), slot.getDate());
+	    for (TimeSlot t : existing) {
+	        // Check for exact overlap or time overlap
+	        if (
+	            (slot.getStartTime().isBefore(t.getEndTime()) && slot.getEndTime().isAfter(t.getStartTime()))
+	        ) {
+	            throw new IllegalArgumentException("Slot overlaps with an existing slot for this table!");
+	        }
+	    }
+	    return slotRepo.save(slot);
 	}
 
 	public void deleteSlot(Long id) {
+		if(!slotRepo.existsById(id)) {
+			throw new IllegalArgumentException("Slot not found");
+		}
 		slotRepo.deleteById(id);
 	}
 
-	public List<TimeSlot> getAllSlots() {
-		return slotRepo.findAll();
+	public List<TimeSlot> getAllSlots(Long tableId) {
+		return slotRepo.findByTableId(tableId);
 	}
 
-	public List<TimeSlot> getAvailableSlots(LocalDate date) {
-		return slotRepo.findByDateAndAvailableTrue(date);
+	public List<TimeSlot> getAvailableSlots() {
+		return slotRepo.findByAvailableTrue();
 	}
-}
+	
+	 
+	}

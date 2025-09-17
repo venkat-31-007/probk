@@ -4,6 +4,7 @@ package com.ey.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +18,7 @@ import com.ey.entity.Booking;
 import com.ey.service.BookingService;
 
 import jakarta.validation.Valid;
-
+@CrossOrigin(origins="http://localhost:3000")
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
@@ -28,10 +29,10 @@ public class BookingController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Booking> createBooking(@Valid @RequestBody BookingRequest dto) {
-		Booking b = bookingService.createBooking(dto.getUserId(), dto.getTableId(), dto.getSlotId(),
+	public ResponseEntity<Booking> createBooking(@RequestBody BookingRequest dto) {
+		Booking saved = bookingService.createBooking(dto.getUserId(), dto.getTableId(), dto.getSlotId(),
 				dto.getPhoneNumber());
-		return ResponseEntity.status(201).body(b);
+		return ResponseEntity.status(201).body(saved);
 	}
 
 	@GetMapping("/user/{userId}")

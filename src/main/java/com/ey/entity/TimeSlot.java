@@ -11,6 +11,8 @@ public class TimeSlot {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long slotId;
 	@NotNull
+	private Long tableId;
+	@NotNull
 	private LocalDate date;
 	@NotNull
 	private LocalTime startTime;
@@ -24,6 +26,15 @@ public class TimeSlot {
 
 	public void setSlotId(Long id) {
 		this.slotId = id;
+	}
+
+	
+	public Long getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(Long tableId) {
+		this.tableId = tableId;
 	}
 
 	public LocalDate getDate() {

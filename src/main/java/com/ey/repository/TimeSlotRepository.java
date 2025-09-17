@@ -6,5 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
-	List<TimeSlot> findByDateAndAvailableTrue(LocalDate date);
+	List <TimeSlot> findByTableId(Long tableId);
+	List<TimeSlot> findByTableIdAndDate(Long tableId,LocalDate date);
+	List <TimeSlot> findByAvailableTrue();
 }

@@ -2,12 +2,15 @@ package com.ey.service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.ey.entity.DiningTable;
 import com.ey.enums.TableStatus;
 import com.ey.repository.DiningTableRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class DiningTableService {
@@ -39,6 +42,18 @@ public class DiningTableService {
 	}
 
 	public void deleteTable(Long id) {
-		tableRepo.deleteById(id);
+	    Optional<DiningTable> tableOpt = tableRepo.findById(id);
+	    if (tableOpt.isEmpty()) throw new EntityNotFoundException("Table not found");
+	 
+	    DiningTable table = tableOpt.get();
+	    if ("BOOKED".equals(table.getStatus().toString())) 
+	        throw new IllegalStateException("Cannot delete a booked table");
+	    try{
+	    	tableRepo.deleteById(id);
+	    }
+	    catch(Exception ex) {
+	    	throw new IllegalArgumentException("Table could not be deleted.It must be associated with bookings.");
+	    }
 	}
+	 
 }
